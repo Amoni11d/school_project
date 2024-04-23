@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo_main.png') }}"> <!--иконка вкладки-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/game.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik+One&display=swap">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='img/space.jpg') }}");
+            background-size: 100%;
+            background-repeat: no-repeat;
+            color: #fff;
+        }
+    </style>
+    <title>Математический космос</title>
+</head>
+<body>
+    {% if stage != 6 %}
+    <div class="text_1">МАТЕМАТИЧЕСКИЙ<br/>КОСМОС</div>
+    {% else %}
+    <div class="text_2">У ТЕБЯ ПОЛУЧИЛОСЬ!</div>
+    {% endif %}
+    <div class="Group1">
+        <div class="Group3">
+            <div class="main_menu"><a href="/" class="main_menu_ssilka">Главная страница</a></div>
+            <div class="feedback"><a href="/feedback" class="feedback_ssilka">Связь с нами</a></div>
+            <div class="profile"><a href="/profile" class="profile_ssilka">Личный кабинет</a></div>
+        </div>
+        <div class="Group2">
+            {% if current_user.is_authenticated %}
+                <div class="login"><a href="/profile" class="login_1_link">{{ current_user.username }}</a></div>
+            {% else %}
+                <div class="Rectangle1"></div>
+                <div class="login"><a href="/login" class="login_1_link">Войти</a></div>
+                <div class="reg"><a href="/login" class="register">Регистрация</a></div>
+            {% endif %}
+        </div>
+    </div>
+    {% if stage != 6 %}
+        <img class="pirate_1" src="{{ url_for('static', filename='img/alien.png') }}" />
+        <img class="message" src="{{ url_for('static', filename='img/message.png') }}" />
+    {% else %}
+        <img class="pirate_2" src="{{ url_for('static', filename='img/alien_1.png') }}" />
+        <img class="message_1" src="{{ url_for('static', filename='img/message.png') }}" />
+    {% endif %}
+    {% if stage == 1 %}
+        <div class="task_1">Тебе нужно рассчитать произведение чисел,<br>
+            чтобы собрать часть космического корабля.<br>
+            Задача: Сколько будет 6 * 9? Это число<br>
+            поможет тебе собрать одну из частей корабля.</div>
+        <div class="forma">
+            <input class='form-control' type="number" id="answer" required placeholder="Введите ответ здесь">
+        </div>
+        <button class="btn btn-success" onclick="checkAnswer(1)">Ответить</button>
+    {% elif stage == 2 %}
+        <div class="task_2">Для восстановления систем корабля<br>
+            тебе нужно найти значение неизвестной<br> 
+            переменной. Задача: Найди значение<br>
+            x в уравнении 23 + x = 31.<br>
+            Какое число тебе нужно прибавить к 23,<br>
+            чтобы получить 31?</div>
+        <div class="forma">
+            <input class='form-control' type="number" id="answer" required placeholder="Введите ответ здесь">
+        </div>
+        <button class="btn btn-success" onclick="checkAnswer(2)">Ответить</button>
+    {% elif stage == 3 %}
+        <div class="task_3">Для расчета запасов кислорода на<br>
+            корабле, реши деление.Задача: Раздели<br>
+            56 на 7. Сколько кислорода получится<br>
+            на каждую единицу?</div>
+            <div class="forma">
+                <input class='form-control' type="number" id="answer" required placeholder="Введите ответ здесь">
+            </div>
+            <button class="btn btn-success" onclick="checkAnswer(3)">Ответить</button>
+    {% elif stage == 4 %}
+        <div class="task_4">Тебе нужно рассчитать количество<br>
+            контейнеров с грузом, чтобы заполнить<br>
+            космический корабль.Задача: Если в 4<br>
+            банки разлили 20 кг груза, сколько<br>
+            банок потребуется, чтобы разлить 30 кг?</div>
+            <div class="forma">
+                <input class='form-control' type="number" id="answer" required placeholder="Введите ответ здесь">
+            </div>
+            <button class="btn btn-success" onclick="checkAnswer(4)">Ответить</button>
+    {% elif stage == 6 %}
+        <div class="task_2">Мы с тобой смогли найти это<br/>сокровище! Теперь будем купаться в<br/>золоте и драгоценностях!<br/><br/>Спасибо!</div>
+    {% endif %}
+    <p class="result" id="result"></p>
+
+
+    <script>
+        function checkAnswer(stage) {
+            var answer = $('#answer').val();
+            $.post('/check_answer_5', { stage: stage, answer: answer }, function(data) {
+                if (data.result) {
+                    if (data.next_stage !== 5) {
+                        window.location.href = '/next_stage_5?stage=' + data.next_stage;
+                    } else {
+                        fetch(`/game_complete/5`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({}),
+                        })
+                        window.location.href = '/next_stage_5?stage=6';
+                    }
+                } else {
+                    $('#result').text('Неверный ответ. Попробуйте еще раз.');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+<!--
+<div class="MacbookPro163" style="width: 1920px; height: 1080px; position: relative; background: linear-gradient(49deg, white 0%, #CFE2FF 100%)">
+  <img class="SnegTopPFonNarisovanniiKosmicheskiiInstagram311" style="width: 1920px; height: 1080px; left: 0px; top: 0px; position: absolute" src="https://via.placeholder.com/1920x1080" />
+  <div style="left: 524px; top: 264px; position: absolute; color: #DBFF00; font-size: 63px; font-family: Rubik One; font-weight: 400; word-wrap: break-word">МАТЕМАТИЧЕСКИЙ<br/>КОСМОС</div>
+  <div class="Group1" style="width: 1123px; height: 41px; left: 713px; top: 72px; position: absolute">
+    <div class="Group3" style="width: 493px; height: 20px; left: 0px; top: 10px; position: absolute">
+      <div style="left: 0px; top: 0px; position: absolute; text-align: center; color: white; font-size: 17px; font-family: Rubik; font-weight: 300; word-wrap: break-word">Главная страница</div>
+      <div style="left: 388px; top: 0px; position: absolute; text-align: center; color: white; font-size: 17px; font-family: Rubik; font-weight: 300; word-wrap: break-word">Связь с нами</div>
+      <div style="left: 201px; top: 0px; position: absolute; text-align: center; color: white; font-size: 17px; font-family: Rubik; font-weight: 300; word-wrap: break-word">Личный кабинет</div>
+    </div>
+    <div class="Group2" style="width: 182px; height: 41px; left: 941px; top: 0px; position: absolute">
+      <div class="Rectangle1" style="width: 118px; height: 41px; left: 0px; top: 0px; position: absolute; background: #DBFF00; border-radius: 21.50px"></div>
+      <div style="left: 144px; top: 13px; position: absolute; text-align: center; color: white; font-size: 13px; font-family: Rubik; font-weight: 300; word-wrap: break-word">Войти</div>
+      <div style="left: 18px; top: 13px; position: absolute; text-align: center; color: black; font-size: 13px; font-family: Rubik; font-weight: 400; word-wrap: break-word">Регистрация</div>
+    </div>
+  </div>
+  <div class="Image71" style="width: 577px; height: 875px; left: 136px; top: 205px; position: absolute; box-shadow: 0px 4px 8.5px rgba(0, 0, 0, 0.17)"></div>
+  <img class="C8411176c8c15ace3e2c4f1" style="width: 720.62px; height: 344.64px; left: 473.64px; top: 420px; position: absolute" src="https://via.placeholder.com/721x345" />
+  <div style="left: 740px; top: 501px; position: absolute; text-align: center; color: black; font-size: 26px; font-family: Rubik; font-weight: 400; word-wrap: break-word">задание</div>
+  <div style="left: 807px; top: 810px; position: absolute; text-align: center; color: black; font-size: 28px; font-family: Rubik; font-weight: 400; word-wrap: break-word">Помочь Виндору</div>
+  <img class="E6b9ceeF60044df906a116e174d1996011" style="width: 547px; height: 829px; left: 1107px; top: 228px; position: absolute" src="https://via.placeholder.com/547x829" />
+  <div class="Rectangle6" style="width: 541px; height: 98px; left: 521px; top: 794px; position: absolute; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 49px; border: 11px #DBFF00 solid"></div>
+</div>
+
+
+completed:
+
+
+<div class="MacbookPro164" style="width: 1920px; height: 1080px; position: relative; background: linear-gradient(49deg, white 0%, #CFE2FF 100%)">
+  <img class="SnegTopPFonNarisovanniiKosmicheskiiInstagram311" style="width: 1920px; height: 1080px; left: 0px; top: 0px; position: absolute" src="https://via.placeholder.com/1920x1080" />
+  <div style="left: 645px; top: 264px; position: absolute; color: #DBFF00; font-size: 63px; font-family: Rubik One; font-weight: 400; word-wrap: break-word">МАТЕМАТИЧЕСКИЙ<br/>КОСМОС</div>
+  <div class="Group1" style="width: 1123px; height: 41px; left: 713px; top: 72px; position: absolute">
+    <div class="Group3" style="width: 493px; height: 20px; left: 0px; top: 10px; position: absolute">
+      <div style="left: 0px; top: 0px; position: absolute; text-align: center; color: white; font-size: 17px; font-family: Rubik; font-weight: 300; word-wrap: break-word">Главная страница</div>
+      <div style="left: 388px; top: 0px; position: absolute; text-align: center; color: white; font-size: 17px; font-family: Rubik; font-weight: 300; word-wrap: break-word">Связь с нами</div>
+      <div style="left: 201px; top: 0px; position: absolute; text-align: center; color: white; font-size: 17px; font-family: Rubik; font-weight: 300; word-wrap: break-word">Личный кабинет</div>
+    </div>
+    <div class="Group2" style="width: 182px; height: 41px; left: 941px; top: 0px; position: absolute">
+      <div class="Rectangle1" style="width: 118px; height: 41px; left: 0px; top: 0px; position: absolute; background: #DBFF00; border-radius: 21.50px"></div>
+      <div style="left: 144px; top: 13px; position: absolute; text-align: center; color: white; font-size: 13px; font-family: Rubik; font-weight: 300; word-wrap: break-word">Войти</div>
+      <div style="left: 18px; top: 13px; position: absolute; text-align: center; color: black; font-size: 13px; font-family: Rubik; font-weight: 400; word-wrap: break-word">Регистрация</div>
+    </div>
+  </div>
+  <div class="Image71" style="width: 577px; height: 875px; left: 136px; top: 205px; position: absolute; box-shadow: 0px 4px 8.5px rgba(0, 0, 0, 0.17)"></div>
+  <img class="C8411176c8c15ace3e2c4f1" style="width: 726.77px; height: 347.58px; left: 1223.42px; top: 446.46px; position: absolute; transform: rotate(-179.73deg); transform-origin: 0 0" src="https://via.placeholder.com/727x348" />
+  <div class="E" style="left: 665px; top: 522px; position: absolute; text-align: center; color: black; font-size: 26px; font-family: Rubik; font-weight: 400; word-wrap: break-word">Eпиии! Этот корабль получился<br/>даже лучше чем был! Ты просто мастер<br/>Теперь тебе всегда будут рады на моей<br/>планете!<br/><br/>Спасибо, друг!</div>
+  <img class="D3d2db6fe144de8e4e09fff82181cb111" style="width: 472px; height: 715px; left: 120px; top: 264px; position: absolute" src="https://via.placeholder.com/472x715" />
+</div>
+
+background - space.jpg
+alien.png - не пройденный
+alien_1.png - пройденный
+-->

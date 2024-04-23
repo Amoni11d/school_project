@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo_main.png') }}"> <!--иконка вкладки-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/game_2.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik+One&display=swap">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='img/ostrov.png') }}");
+            background-size: 100%;
+            background-repeat: no-repeat;
+            color: #fff;
+        }
+    </style>
+    <title>Арифметическая карта сокровищ</title>
+</head>
+<body>
+    {% if stage != 6 %}
+    <div class="text_1">АРИФМЕТИЧЕСКАЯ<br/>КАРТА СОКРОВИЩ</div>
+    {% else %}
+    <div class="text_2">У ТЕБЯ ПОЛУЧИЛОСЬ!</div>
+    {% endif %}
+    <div class="Group1">
+        <div class="Group3">
+            <div class="main_menu"><a href="/" class="main_menu_ssilka">Главная страница</a></div>
+            <div class="feedback"><a href="/feedback" class="feedback_ssilka">Связь с нами</a></div>
+            <div class="profile"><a href="/profile" class="profile_ssilka">Личный кабинет</a></div>
+        </div>
+        <div class="Group2">
+            {% if current_user.is_authenticated %}
+                <div class="login"><a href="/profile" class="login_1_link">{{ current_user.username }}</a></div>
+            {% else %}
+                <div class="Rectangle1"></div>
+                <div class="login"><a href="/login" class="login_1_link">Войти</a></div>
+                <div class="reg"><a href="/login" class="register">Регистрация</a></div>
+            {% endif %}
+        </div>
+    </div>
+    {% if stage != 6 %}
+        <img class="pirate_1" src="{{ url_for('static', filename='img/pirate_1.png') }}" />
+        <img class="message" src="{{ url_for('static', filename='img/message.png') }}" />
+    {% else %}
+        <img class="pirate_2" src="{{ url_for('static', filename='img/pirate.png') }}" />
+        <img class="message_1" src="{{ url_for('static', filename='img/message.png') }}" />
+    {% endif %}
+    {% if stage == 1 %}
+        <div class="task_1">Чтобы открыть первую дверь к сокровищам,<br>
+            тебе нужно умножить число 57208 на 10,<br>
+            используя старинный механизм на острове.<br>
+            Загадка: Для того чтобы разблокировать<br>
+            путь к первой части карты, умножь число 57208 на 10.<br>
+            Какое число получится?</div>
+        <div class="forma">
+            <input class='form-control' type="number" id="answer" required placeholder="Введите ответ здесь">
+        </div>
+        <button class="btn btn-success" onclick="checkAnswer(1)">Ответить</button>
+    {% elif stage == 2 %}
+        <div class="task_2">Пираты обнаружили загадочный дневник с записями.<br>
+            Они видят упоминание числа 5300, но не знают,<br>
+            какое число нужно добавить, чтобы получить<br>
+            ключевое значение и продолжить поиски. <br>
+            Загадка: Чтобы найти следующую индикацию на карте,<br>
+            найди число, которое необходимо прибавить к 5300,<br>
+            чтобы получить 6000. Какое это число?</div>
+        <div class="forma">
+            <input class='form-control' type="number" id="answer" required placeholder="Введите ответ здесь">
+        </div>
+        <button class="btn btn-success" onclick="checkAnswer(2)">Ответить</button>
+    {% elif stage == 3 %}
+        <div class="task_3">На пути к сокровищам пираты сталкиваются<br>
+            с уравнением, которое нужно решить,<br>
+            чтобы открыть дверь к следующему этапу<br>
+            поисков.Загадка: Для того чтобы пройти<br>
+            через закрытую стену, вставь правильное<br>
+            число в уравнение: 9400 + _ = 10250 - 250.<br>
+            Какое число здесь нужно?</div>
+            <div class="forma">
+                <input class='form-control' type="number" id="answer" required placeholder="Введите ответ здесь">
+            </div>
+            <button class="btn btn-success" onclick="checkAnswer(3)">Ответить</button>
+    {% elif stage == 4 %}
+        <div class="task_4">На острове ты находишь старую кухню<br>
+            с запасами масла. Решив эту задачу,<br>
+            ты сможешь определить, на сколько дней<br>
+            хватит масла для пиратов.Загадка:<br>
+            Если за 7 дней команда израсходовала<br>
+            21 кг масла, на сколько дней хватит 36 кг<br>
+            масла при той же норме расхода?</div>
+            <div class="forma">
+                <input class='form-control' type="number" id="answer" required placeholder="Введите ответ здесь">
+            </div>
+            <button class="btn btn-success" onclick="checkAnswer(4)">Ответить</button>
+    {% elif stage == 6 %}
+        <div class="task_2">Мы с тобой смогли найти это<br/>сокровище! Теперь будем купаться в<br/>золоте и драгоценностях!<br/><br/>Спасибо!</div>
+    {% endif %}
+    <p class="result" id="result"></p>
+
+
+    <script>
+        function checkAnswer(stage) {
+            var answer = $('#answer').val();
+            $.post('/check_answer', { stage: stage, answer: answer }, function(data) {
+                if (data.result) {
+                    if (data.next_stage !== 5) {
+                        window.location.href = '/next_stage?stage=' + data.next_stage;
+                    } else {
+                        fetch(`/game_complete/2`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({}),
+                        })
+                        window.location.href = '/next_stage?stage=6';
+                    }
+                } else {
+                    $('#result').text('Неверный ответ. Попробуйте еще раз.');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+<!--
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Математическая карта сокровищ</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/game_2.css') }}">
+</head>
+<body>
+
+            <h1>Загадка Профессора Магии</h1>
+            <p></p>
+            <img src="{{ url_for('static', filename='img/volshebnik.png') }}" alt="">
+            <input class='form-control' type="number" id="answer" required>
+            <button class="btn btn-success" onclick="checkAnswer(4)">Ответить</button>
+            <p id="result"></p>
+
+            <h1>Финальное сокровище</h1>
+            <p>Поздравляем! Вы нашли финальное сокровище!</p>
+            <a class='btn btn-primary' href="/profile">Перейти в профиль</a>
+    </div>
+
+    <script>
+        function checkAnswer(stage) {
+            var answer = $('#answer').val();
+            $.post('/check_answer', { stage: stage, answer: answer }, function(data) {
+                if (data.result) {
+                    if (data.next_stage !== 5) {
+                        window.location.href = '/next_stage?stage=' + data.next_stage;
+                    } else {
+                        fetch(`/game_complete/2`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({}),
+                        })
+                        window.location.href = '/next_stage?stage=6';
+                    }
+                } else {
+                    $('#result').text('Неверный ответ. Попробуйте еще раз.');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+-->

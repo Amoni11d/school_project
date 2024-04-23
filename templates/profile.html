@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rubik">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rubik+One&display=swap">
+    <title>Профиль</title>
+</head>
+<body>
+    <div style="width: 100%; height: 100%; position: relative">
+      <img class="primerchiki_background" src="{{ url_for('static', filename='img/primerchiki.png') }}" />
+      <img class="primerchiki_background_1" src="{{ url_for('static', filename='img/primerchiki.png') }}" />
+      <img class="primerchiki_background_2" src="{{ url_for('static', filename='img/primerchiki_1.png') }}" />
+      <div class="text_1">ДОБРО ПОЖАЛОВАТЬ!</div>
+      <div class="text_2"><span class="text_2_span">Здесь ты сможешь не только учиться, но и развивать свои навыки через увлекательные игры и задания. <br/></span><span class="text_2_span_1">Создай свой уникальный профиль, следи за своим прогрессом и соревнуйся с друзьями, чтобы стать лучшим учеником!</span></div>
+      <div class="text_3">ТВОИ ДОСТИЖЕНИЯ</div>
+      <div class="Group4">
+        <div class="Group3">
+          <div class="main"><a href="/" class="main_ssilka">Главная страница</a></div>
+          <div class="feedback_1"><a href="/feedback" class="feedback_1_ssilka">Связь с нами</a></div>
+          <div class="profile_cabinet"><a href="/profile" class="profile_cabinet_ssilka">Личный кабинет</a></div>
+        </div>
+        <div class="background_game"></div>
+        <div class="name_game_1">Поисковое приключение</div>
+        <div class="background_game_1"></div>
+        <div class="background_game_2"></div>
+        <div class="krug_game_1"></div>
+        {% for game_result in game_results %}
+          {% if game_result == 2 %}
+          <div class="krug_game_1 completed"></div>
+          {% endif %}
+        {% endfor %}
+        <div class="krug_game_2"></div>
+        {% for game_result in game_results %}
+          {% if game_result == 3 %}
+           <div class="krug_game_2 completed"></div>
+          {% endif %}
+        {% endfor %}
+
+    
+    <div class="krug_game_3"></div>
+        {% for game_result in game_results %}
+          {% if game_result == 4 %}
+            <div class="krug_game_3 completed"></div>
+          {% endif %}
+        {% endfor %}
+        <div class="krug_game_4"></div>
+        <div class="background_game_3"></div>
+        <div class="name_game_2">Арифметическая карта сокровищ</div>
+        <div class="name_game_3">Математический космос</div>
+        <img class="Kosmos_logo" src="{{ url_for('static', filename='img/rocket.png') }}" />
+        <img class="Sokrov_logo" src="{{ url_for('static', filename='img/chest_gold.png') }}" />
+        <img class="Poisk_logo" src="{{ url_for('static', filename='img/lupa.png') }}" />
+        <div class="name_game_4">Загадка древнего лабиринта</div>
+        <img class="Labirint_logo" src="{{ url_for('static', filename='img/labirint_1.png') }}" />
+        <div class="text_4">А ты знаешь, что....</div>
+        <div class=""></div>
+        <div class="background_facts"></div>
+        {% for game_result in game_results %}
+          {% if game_result == 5 %}
+          <div class="background_facts completed"></div>
+          {% endif %}
+        {% endfor %}
+        
+        <div class="facts"><h3>1. Ноль — это чётное число.</h3>
+        <h3>2. Считать проценты не так сложно, как кажется.</h3>
+        <h3>3. Сумма чисел на противоположных сторонах игрального <br>
+        кубика всегда равна семи.</h3>
+        <h3>4. Каждое нечётное число в английском языке содержит <br> букву «е».</h3>
+        <h3>5. 4 (four) — единственное число, при написании которого<br>на английском количество букв соответствует самому <br>числу.</h3>
+        <h3>6. Если подсчитать количество букв в названии 13<br>игральных карт на английском языке,<br> получится 52 буквы.</h3>
+        <h3>7. Единственное число, которое пишется английскими<br>буквами в алфавитном порядке, — 40 (forty).</h3>
+        <h3>8. Торт можно разделить на 8 равных кусков всего<br>тремя движениями.</h3>
+        <h3>9. Количество миллисекунд в сутках равно 5⁵ × 4⁴ × 3³ × 2² × 1¹.</h3>
+        <h3>10. Умножение единиц всегда даёт палиндромные числа.</h3></div>
+      </div>
+    </div>
+</body>
+</html>
+

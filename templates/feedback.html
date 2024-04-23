@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/feedback.css') }}">
+    <title>Обратная связь</title>
+</head>
+<body>
+    <div class="back">
+        <div class="call">СВЯЗЬ С НАМИ</div>
+        <div class="brow">
+          <div class="brow_1">
+            <div class="main"><a href="/" class="main_menu_ssilka">Главная страница</a></div>
+            <div class="feedback"><a href="/feedback" class="feedback_ssilka">Связь с нами</a></div>
+            <div class="profile"><a href="/profile" class="profile_ssilka">Личный кабинет</a></div>
+          </div>
+          <div class="brow_2">
+            {% if current_user.is_authenticated %}
+            <div class="login_1"><a href="/profile" class="login_1_link">{{ current_user.username }}</a></div>
+            {% else %}
+                <div class="brow_3"></div>
+                <div class="login_1"><a href="/login" class="login_1_link">Войти</a></div>
+                <div class="reg"><a href="/login" class="reg_link">Регистрация</a></div>
+            {% endif %}
+          </div>
+        </div>
+        <div class="plus_minus">±</div>
+        <div class="bolshe">≥</div>
+        <div class="pi">π</div>
+        <form id="form" action="/submit_feedback" method="POST">
+            <textarea class='feedback_form' name="message" id="message_input" autocomplete="off" placeholder="Введите ваш отзыв..."></textarea>
+            <button class="glow-on-hover" type="submit">Send</button>
+        </form>
+        <div id="success_message" style="display: none;" class="success_feedback">Отзыв успешно отправлен!</div>
+        <div class="text_12">Мы всегда рады ответить на ваши вопросы, предложения и отзывы!<br/>Наша команда работает для вас и готова помочь в любое удобное для вас время.<br/>Благодарим за доверие и интерес к нашему сайту!</div>
+        <div class="text_13">Вы можете связаться с нами, заполнив форму обратной  связи ниже <br/>или написав нам по электронной почте</div>
+      </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
+    <script>
+        // Функция отправки сообщения через форму
+        function sendMessage() {
+            var messageInput = document.getElementById('message_input');
+            var message = messageInput.value;
+            if (message.trim() !== "") {
+                document.getElementById('form').submit(); // Отправка формы
+                messageInput.value = '';
+                document.getElementById('success_message').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

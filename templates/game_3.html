@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/game_3.css') }}">
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='img/search.jpg') }}");
+            background-size: 100%;
+            background-repeat: no-repeat;
+        }
+    </style>
+    <title>Поисковое приключение</title>
+</head>
+<body>
+    {% if stage != 6 %}
+    <div class="text_1">ПОИСКОВОЕ<br/>ПРИКЛЮЧЕНИЕ</div>
+    {% else %}
+    <div class="text_2">У ТЕБЯ ВСЕ<br>ПОЛУЧИЛОСЬ!</div>
+    {% endif %}
+    <div class="Group1">
+        <div class="Group3">
+            <div class="main_menu"><a href="/" class="main_menu_ssilka">Главная страница</a></div>
+            <div class="feedback"><a href="/feedback" class="feedback_ssilka">Связь с нами</a></div>
+            <div class="profile"><a href="/profile" class="profile_ssilka">Личный кабинет</a></div>
+        </div>
+        <div class="Group2">
+            {% if current_user.is_authenticated %}
+                <div class="login"><a href="/profile" class="login_1_link">{{ current_user.username }}</a></div>
+            {% else %}
+                <div class="Rectangle1"></div>
+                <div class="login"><a href="/login" class="login_1_link">Войти</a></div>
+                <div class="reg"><a href="/login" class="register">Регистрация</a></div>
+            {% endif %}
+        </div>
+    </div>
+    {% if stage != 6 %}
+        <img class="pirate_1" src="{{ url_for('static', filename='img/dodik_search.png') }}" />
+        <img class="message" src="{{ url_for('static', filename='img/message.png') }}" />
+    {% else %}
+        <img class="pirate_2" src="{{ url_for('static', filename='img/ne_dodik_search.png') }}" />
+        <img class="message_1" src="{{ url_for('static', filename='img/message.png') }}" />
+    {% endif %}
+    {% if stage == 1 %}
+        <div class="task_1">Чтобы пройти через лабиринт до особняка,<br>
+            нужно вычислить, сколько раз по 100 метров<br>
+            содержится в 2 километрах.Загадка: Сколько<br>
+            отрезков по 100 метров входит в расстояние<br>
+            в 2 километрах? Это поможет вам преодолеть<br>
+            первое препятствие на пути к особняку.</div>
+        <div class="forma">
+            <input class='form-control' type="number" id="answer" required placeholder="Введите ответ здесь">
+        </div>
+        <button class="btn btn-success" onclick="checkAnswer(1)">Ответить</button>
+    {% elif stage == 2 %}
+        <div class="task_2">Для активации механизма открытия двери<br>
+            в особняк, нужно решить математическое<br>
+            уравнение.Загадка: Рассчитайте выражение<br>
+            7 * (10 + 4) удобным способом. <br>Какой результат получится?</div>
+        <div class="forma">
+            <input class='form-control' type="number" id="answer" required placeholder="Введите ответ здесь">
+        </div>
+        <button class="btn btn-success" onclick="checkAnswer(2)">Ответить</button>
+    {% elif stage == 3 %}
+        <div class="task_3">На пути к особняку нужно решить простое<br>
+            умножение.Загадка: Чему равно 70 * 12?<br>
+            Это число поможет вам расшифровать<br>
+            следующий шифр.</div>
+            <div class="forma">
+                <input class='form-control' type="number" id="answer" required placeholder="Введите ответ здесь">
+            </div>
+            <button class="btn btn-success" onclick="checkAnswer(3)">Ответить</button>
+    {% elif stage == 4 %}
+        <div class="task_4">Внутри особняка вы находите старый сейф с<br>
+            уравнением, которое нужно решить для<br>
+            открытия сейфа и нахождения документов.<br>
+            Загадка: Какое значение x удовлетворяет<br>
+            уравнению x * 802 = 0? Решите уравнение,<br>
+            чтобы разблокировать сейф с фамильными<br>
+            документами.</div>
+            <div class="forma">
+                <input class='form-control' type="number" id="answer" required placeholder="Введите ответ здесь">
+            </div>
+            <button class="btn btn-success" onclick="checkAnswer(4)">Ответить</button>
+    {% elif stage == 6 %}
+        <div class="task_2">Свершилось!<br/>Фамильные документы у меня!<br/>Ты даже не представляешь что с ними<br>можно сделать! Я очень благодарен!</div>
+    {% endif %}
+    <p class="result" id="result"></p>
+
+
+    <script>
+        function checkAnswer(stage) {
+            var answer = $('#answer').val();
+            $.post('/check_answer_1', { stage: stage, answer: answer }, function(data) {
+                if (data.result) {
+                    if (data.next_stage !== 5) {
+                        window.location.href = '/next_stage_1?stage=' + data.next_stage;
+                    } else {
+                        fetch(`/game_complete/3`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({}),
+                        })
+                        window.location.href = '/next_stage_1?stage=6';
+                    }
+                } else {
+                    $('#result').text('Неверный ответ. Попробуйте еще раз.');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+
+
+
+<!--
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поисковое Приключение</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/game_3.css') }}">
+</head>
+<body>
+    <div id="game-container">
+
+
+
+
+
+            <h1>Поздравляем!</h1>
+            <p>Вы спасли принцессу!</p>
+            <a class='btn btn-primary' href="/profile">Перейти в профиль</a>
+
+    </div>
+
+    <script>
+        function checkAnswer(stage) {
+            var answer = $('#answer').val();
+            $.post('/check_answer_1', { stage: stage, answer: answer }, function(data) {
+                if (data.result) {
+                    if (data.next_stage !== 5) {
+                        window.location.href = '/next_stage_1?stage=' + data.next_stage;
+                    } else {
+                        fetch(`/game_complete/3`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({}),
+                        })
+                        window.location.href = '/next_stage_1?stage=6';
+                    }
+                } else {
+                    $('#result').text('Неверный ответ. Попробуйте еще раз.');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+-->

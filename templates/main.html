@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo_main.png') }}"> <!--иконка вкладки-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main_1.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rubik">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rubik+One&display=swap">
+    <title>Главная</title>
+</head>
+<body>
+    {% if current_user.is_authenticated %}
+        <div style="width: 100%; height: 100%; position: relative; background: linear-gradient(116deg, white 0%, #CFE2FF 100%)">
+            <div class="text_5">УЧИСЬ ИГРАЯ</div>
+            <div class="main_menu"><a href="/" class="main_menu_ssilka">Главная страница</a></div>
+            <div class="feedback"><a href="/feedback" class="feedback_ssilka">Связь с нами</a></div>
+            <div class="profile"><a href="/profile" class="profile_ssilka">Личный кабинет</a></div>
+            <div class="login_1"><a href="/profile" class="login_1_link">{{ current_user.username }}</a></div>
+            <div class="delenie"><a href="/game_1">÷</a></div>
+            <div class="umnozhenie"><a href="/game_2">×</a></div>
+            <div class="plus_minus"><a href="/game_4">±</a></div>
+            <div class="bolshe">≥</div>
+            <div class="pi">π</div>
+            <div class="krug"></div>
+            <div class="primerno"><a href="/game_3">≈</a></div>
+            <div class="text_krug">скорее жми на <br/>математические знаки,<br/>чтобы запустить игру</div>
+        </div>
+    {% else %}
+        <div style="width: 100%; height: 100%; position: relative; background: linear-gradient(116deg, white 0%, #CFE2FF 100%)">
+            <div class="brow"></div>
+            <div class="text_5">УЧИСЬ ИГРАЯ</div>
+            <div class="main_menu"><a href="/" class="main_menu_ssilka">Главная страница</a></div>
+            <div class="feedback"><a href="/feedback" class="feedback_ssilka">Связь с нами</a></div>
+            <div class="profile"><a href="/login" class="profile_ssilka">Личный кабинет</a></div>
+            <div class="login_1"><a href="/login" class="login_1_link">Войти</a></div>
+            <div class="reg"><a href="/login" class="register">Регистрация</a></div>
+            <div class="delenie">÷</div>
+            <div class="umnozhenie">×</div>
+            <div class="plus_minus">±</div>
+            <div class="bolshe">≥</div>
+            <div class="pi">π</div>
+            <div class="primerno">≈</div>
+            <div class="login"><span>Пройди </span><a href="/login" class="login_ssilka"> регистрацию</a><span> или <a href="/login" class="login_ssilka">войди</a> в личный кабинет, чтобы играть!</span></div>
+    {% endif %}
+</body>
+</html>
